@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>人大经济学“天选导师”匹配测试</title>
+  <style>
+    :root {
+      --ink: #222;
+      --muted: #666;
+      --line: #e6e8eb;
+      --soft: #f7f8fa;
+      --accent: #8d1b24;
+      --accent-dark: #601018;
+      --gold: #b5822b;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 22px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      background: #fff;
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+      line-height: 1.65;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 680px;
+      padding: 16px 0 48px;
+    }
+
+    .topline {
+      color: var(--accent);
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-align: center;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      text-align: center;
+      font-size: 1.65rem;
+      line-height: 1.3;
+    }
+
+    .intro {
+      margin: 0 auto 28px;
+      max-width: 560px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.96rem;
+    }
+
+    .form-group { margin-bottom: 22px; }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 700;
+      font-size: 1.03rem;
+    }
+
+    select,
+    input[type="text"] {
+      width: 100%;
+      min-height: 48px;
+      border: 1px solid #cfd4da;
+      border-radius: 8px;
+      padding: 11px 13px;
+      background: #fff;
+      color: var(--ink);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.18s, box-shadow 0.18s;
+    }
+
+    select:focus,
+    input[type="text"]:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(141, 27, 36, 0.12);
+    }
+
+    input[type="text"] { text-transform: uppercase; }
+
+    .error-msg {
+      display: none;
+      margin-top: 6px;
+      color: #b00020;
+      font-size: 0.9rem;
+    }
+
+    .btn {
+      min-height: 46px;
+      border: 0;
+      border-radius: 8px;
+      padding: 11px 24px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.16s, opacity 0.16s, background 0.16s;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+
+    .btn-primary {
+      display: block;
+      margin: 34px auto 0;
+      min-width: 160px;
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .btn-primary:hover { background: var(--accent-dark); }
+
+    .btn-light {
+      background: #eef0f3;
+      color: #2d3035;
+    }
+
+    .btn-light:hover { background: #e1e4e8; }
+
+    #quiz-screen,
+    #result-screen { display: none; }
+
+    .progress-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 18px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .progress-track {
+      flex: 1;
+      height: 7px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #edf0f2;
+    }
+
+    .progress-fill {
+      width: 0;
+      height: 100%;
+      background: var(--accent);
+      transition: width 0.22s;
+    }
+
+    .question-text {
+      margin: 0 0 20px;
+      font-size: 1.22rem;
+      font-weight: 800;
+      line-height: 1.5;
+    }
+
+    .option-btn {
+      display: block;
+      width: 100%;
+      min-height: 58px;
+      margin-bottom: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 15px 17px;
+      background: var(--soft);
+      color: var(--ink);
+      text-align: left;
+      font-size: 1rem;
+      line-height: 1.55;
+      cursor: pointer;
+      transition: background 0.16s, border-color 0.16s, transform 0.16s;
+    }
+
+    .option-btn:hover {
+      background: #fff;
+      border-color: #bfc6cf;
+      transform: translateY(-1px);
+    }
+
+    .result-header {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .result-header h2 {
+      margin: 0 0 8px;
+      font-size: 1.55rem;
+    }
+
+    .result-type {
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .metaphysics-text {
+      margin-bottom: 22px;
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      padding: 14px 15px;
+      background: var(--soft);
+      color: #555;
+      font-size: 0.96rem;
+    }
+
+    .teacher-card {
+      border: 2px solid var(--ink);
+      border-radius: 12px;
+      padding: 24px;
+      background: #fff;
+    }
+
+    .t-name {
+      margin: 0 0 6px;
+      font-size: 2rem;
+      line-height: 1.2;
+    }
+
+    .t-fields {
+      margin-bottom: 18px;
+      color: #555;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .t-desc {
+      color: #333;
+      font-size: 1.03rem;
+    }
+
+    .ranking-section {
+      margin-top: 30px;
+    }
+
+    .ranking-section h3 {
+      margin: 0 0 12px;
+      font-size: 1.12rem;
+    }
+
+    .ranking-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .ranking-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid #f0f1f3;
+      font-size: 1.02rem;
+    }
+
+    .ranking-item:last-child { border-bottom: 0; }
+    .rank-name { font-weight: 700; }
+    .rank-score { color: var(--muted); white-space: nowrap; }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-top: 26px;
+    }
+
+    .score-chip {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 9px 7px;
+      text-align: center;
+      background: #fff;
+    }
+
+    .score-chip strong {
+      display: block;
+      color: var(--accent);
+      font-size: 1.05rem;
+    }
+
+    .score-chip span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.35;
+    }
+
+    .btn-group {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 34px;
+      flex-wrap: wrap;
+    }
+
+    .credit {
+      margin: 34px auto 0;
+      max-width: 560px;
+      color: #888;
+      text-align: center;
+      font-size: 0.86rem;
+    }
+
+    .credit a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .credit a:hover { text-decoration: underline; }
+
+    @media (max-width: 520px) {
+      body { padding: 18px; }
+      h1 { font-size: 1.42rem; }
+      .teacher-card { padding: 20px; }
+      .t-name { font-size: 1.68rem; }
+      .score-grid { grid-template-columns: repeat(2, 1fr); }
+      .ranking-item { grid-template-columns: 1fr; gap: 2px; }
+      .rank-score { white-space: normal; }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <div id="form-screen">
+      <div class="topline">RUC ECON MENTOR TEST</div>
+      <h1>人大经济学“天选导师”匹配测试</h1>
+      <p class="intro">请凭第一直觉作答。系统会读取你的研究气质，并生成一份命定导师排行榜。</p>
+
+      <div class="form-group">
+        <label for="input-zodiac">你的星座</label>
+        <select id="input-zodiac">
+          <option value="白羊座">白羊座 (Aries)</option>
+          <option value="金牛座">金牛座 (Taurus)</option>
+          <option value="双子座">双子座 (Gemini)</option>
+          <option value="巨蟹座">巨蟹座 (Cancer)</option>
+          <option value="狮子座">狮子座 (Leo)</option>
+          <option value="处女座">处女座 (Virgo)</option>
+          <option value="天秤座">天秤座 (Libra)</option>
+          <option value="天蝎座">天蝎座 (Scorpio)</option>
+          <option value="射手座">射手座 (Sagittarius)</option>
+          <option value="摩羯座">摩羯座 (Capricorn)</option>
+          <option value="水瓶座">水瓶座 (Aquarius)</option>
+          <option value="双鱼座">双鱼座 (Pisces)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="input-mbti">你的 MBTI</label>
+        <input type="text" id="input-mbti" placeholder="例如 INFP" maxlength="4" autocomplete="off">
+        <div id="mbti-error" class="error-msg">请输入 4 位 MBTI 字母，例如 INFP。</div>
+      </div>
+
+      <div class="form-group">
+        <label for="input-blood">你的血型</label>
+        <select id="input-blood">
+          <option value="A型">A</option>
+          <option value="B型">B</option>
+          <option value="AB型">AB</option>
+          <option value="O型">O</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="input-bazi">你的八字日主</label>
+        <select id="input-bazi">
+          <option value="甲木">甲木</option>
+          <option value="乙木">乙木</option>
+          <option value="丙火">丙火</option>
+          <option value="丁火">丁火</option>
+          <option value="戊土">戊土</option>
+          <option value="己土">己土</option>
+          <option value="庚金">庚金</option>
+          <option value="辛金">辛金</option>
+          <option value="壬水">壬水</option>
+          <option value="癸水">癸水</option>
+        </select>
+      </div>
+
+      <button class="btn btn-primary" onclick="startQuiz()">开始匹配</button>
+    </div>
+
+    <div id="quiz-screen">
+      <div class="progress-row">
+        <span>进度：<span id="quiz-progress">1 / 15</span></span>
+        <div class="progress-track" aria-hidden="true">
+          <div id="progress-fill" class="progress-fill"></div>
+        </div>
+      </div>
+      <div id="question-text" class="question-text">问题加载中...</div>
+      <div id="options-container"></div>
+    </div>
+
+    <div id="result-screen">
+      <div class="result-header">
+        <h2>命定导师匹配报告</h2>
+        <div>你的研究气质偏向：<span id="result-type" class="result-type">生成中</span></div>
+      </div>
+
+      <div id="metaphysics-insight" class="metaphysics-text">生成中...</div>
+
+      <section class="teacher-card">
+        <h3 id="res-name" class="t-name">导师姓名</h3>
+        <div id="res-fields" class="t-fields">代表方向</div>
+        <div id="res-desc" class="t-desc">导师评语</div>
+      </section>
+
+      <section class="ranking-section">
+        <h3>匹配度排行榜</h3>
+        <ul id="ranking-list" class="ranking-list"></ul>
+      </section>
+
+      <section class="score-grid" id="score-grid" aria-label="研究气质分布"></section>
+
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="location.reload()">重新测试</button>
+        <button class="btn btn-light" onclick="shareResult()">分享结果</button>
+      </div>
+    </div>
+
+    <p class="credit">
+      本测试题设计参考了
+      <a href="https://celanaventine.github.io/ruc-mentor-test/" target="_blank" rel="noopener">人大社院“天选导师”匹配测试</a>
+      的互动形式。
+    </p>
+  </main>
+
+  <script>
+    const categoryNames = {
+      A: "制度-历史-理论解释型",
+      B: "证据-识别-政策检验型",
+      C: "边界-外部连接-开放变化型",
+      D: "行动-组织-商业场景型",
+      E: "空间-资源-基层发展型"
+    };
+
+    const categoryShortNames = {
+      A: "慢变量",
+      B: "证据感",
+      C: "边界感",
+      D: "行动感",
+      E: "地方感"
+    };
+
+    const teachers = {
+      A: [
+        { name: "林岗", fields: "政治经济学、社会主义经济理论", desc: "适合喜欢从基本制度、历史逻辑和中国经济现实之间寻找解释链条的同学。" },
+        { name: "刘伟", fields: "政治经济学、发展与改革理论", desc: "如果你关心中国经济改革的大问题，并希望把现实判断放进更厚重的理论框架中，他会很契合。" },
+        { name: "杨瑞龙", fields: "制度经济学、企业理论、转型经济", desc: "擅长把制度安排、组织形式和转型过程中的复杂关系讲清楚，适合喜欢制度分析的研究气质。" },
+        { name: "邱海平", fields: "政治经济学、马克思主义经济理论", desc: "理论底色很强，适合愿意啃概念、追问经济秩序深层结构的同学。" },
+        { name: "谢富胜", fields: "政治经济学、资本积累与中国经济", desc: "适合想把经典理论、当代资本主义和中国经验放在一起理解的同学。" },
+        { name: "陈享光", fields: "政治经济学、经济发展理论", desc: "适合对发展道路、制度条件和长期经济变迁保持敏感的同学。" },
+        { name: "刘明远", fields: "政治经济学、收入分配", desc: "如果你对分配、结构和制度安排之间的关系有兴趣，这类研究会很对味。" },
+        { name: "赵峰", fields: "政治经济学、经济理论", desc: "适合习惯从理论前提出发，慢慢拆解现实问题的研究者。" },
+        { name: "周文", fields: "政治经济学、中国经济", desc: "适合关注中国道路、中国经验与经济理论对话的同学。" },
+        { name: "齐昊", fields: "政治经济学、经济思想与制度分析", desc: "适合既重视理论脉络，也想处理当代经济问题的同学。" },
+        { name: "高德步", fields: "经济史、中国经济史", desc: "如果你相信今天的问题常常藏着很久以前的线索，经济史方向会让你越挖越上头。" },
+        { name: "贺耀敏", fields: "经济史、经济思想史", desc: "适合喜欢旧材料、长时段变化和思想脉络的同学。" },
+        { name: "孙圣民", fields: "经济史、制度变迁", desc: "适合想用历史材料解释经济秩序如何形成与延续的同学。" },
+        { name: "贾根良", fields: "经济思想史、演化经济学", desc: "适合对思想流派、理论争论和经济学范式变化感兴趣的同学。" },
+        { name: "黄淳", fields: "经济思想史、经济理论", desc: "适合喜欢追问概念源流、理论谱系和经典争论的同学。" }
+      ],
+      B: [
+        { name: "陈彦斌", fields: "宏观经济学、宏观政策、定量宏观模型", desc: "适合证据洁癖型选手：重视模型、政策效果和可检验的宏观解释。" },
+        { name: "刘元春", fields: "宏观经济、经济周期、政策分析", desc: "适合关心中国宏观运行、政策选择和现实判断的同学。" },
+        { name: "李勇", fields: "宏观经济学、经济增长", desc: "适合愿意用模型和数据理解长期增长与波动的同学。" },
+        { name: "江艇", fields: "应用计量、劳动与发展、政策评估", desc: "适合喜欢干净识别、扎实数据和清楚因果链条的同学。" },
+        { name: "杨斌", fields: "计量经济学、数量经济", desc: "适合对方法、估计和模型设定特别敏感的同学。" },
+        { name: "马骏", fields: "宏观经济、财政金融", desc: "适合对宏观政策、金融条件和经济运行机制感兴趣的同学。" },
+        { name: "郑超愚", fields: "国民经济、宏观政策", desc: "适合想把宏观判断和政策问题结合起来做研究的同学。" },
+        { name: "杨天宇", fields: "国民经济管理、宏观经济", desc: "适合关心政策协调、经济运行和治理问题的同学。" },
+        { name: "丁守海", fields: "劳动经济、收入分配、政策评估", desc: "适合对就业、收入和公共政策效果感兴趣的同学。" },
+        { name: "苏汝劼", fields: "应用经济、政策评估", desc: "适合喜欢把具体政策问题拆成可验证问题的同学。" },
+        { name: "安子栋", fields: "应用宏观经济学、政策协同、预期管理", desc: "适合对宏观政策组合、预期和现实效果之间关系敏感的同学。" },
+        { name: "潘伟", fields: "应用经济、数量分析", desc: "适合愿意在数据、模型和政策问题之间反复校准的同学。" },
+        { name: "夏晓华", fields: "应用微观、政策效果", desc: "适合喜欢用微观证据回答现实政策问题的同学。" },
+        { name: "张红霞", fields: "应用经济、实证研究", desc: "适合看重数据质量、研究设计和稳健结论的同学。" },
+        { name: "曹佳", fields: "应用经济、政策分析", desc: "适合喜欢把现实议题变成严谨实证问题的同学。" }
+      ],
+      C: [
+        { name: "于春海", fields: "开放宏观经济学、国际贸易", desc: "适合习惯把近处变化放到外部环境里理解的同学。" },
+        { name: "黄卫平", fields: "国际经济、世界经济", desc: "适合关心中国与世界经济关系、开放格局变化的同学。" },
+        { name: "陈建", fields: "国际经济、开放发展", desc: "适合喜欢从边界之外寻找解释变量的研究气质。" },
+        { name: "韩玉军", fields: "国际贸易、开放经济", desc: "适合对外部冲击、本地响应和经济联系变化感兴趣的同学。" },
+        { name: "关权", fields: "国际经济、日本经济", desc: "适合重视国际比较和跨国经验的同学。" },
+        { name: "程大为", fields: "国际贸易、国际经济合作", desc: "适合关注中国开放、规则变化与全球分工的同学。" },
+        { name: "罗来军", fields: "国际经济、开放政策", desc: "适合希望把政策问题放在更大外部图景中理解的同学。" },
+        { name: "门淑莲", fields: "国际经济、国际贸易", desc: "适合喜欢跨地区、跨规则资料和开放问题的同学。" },
+        { name: "章艳红", fields: "国际经济、开放宏观", desc: "适合对外部环境、宏观传导和本地变化的连接感兴趣的同学。" },
+        { name: "王孝松", fields: "国际贸易、开放经济", desc: "适合想研究外部变化如何改变本地选择的同学。" },
+        { name: "徐晓云", fields: "国际经济、贸易政策", desc: "适合喜欢国际规则、外部约束和政策反应的同学。" },
+        { name: "陈志远", fields: "产业经济学、国际贸易、应用计量", desc: "适合希望在外部连接、经验证据和现实问题之间找平衡的同学。" },
+        { name: "杜佳霖", fields: "企业国际化、跨国并购", desc: "适合对跨边界行动、组织选择和全球布局感兴趣的同学。" },
+        { name: "李桂芳", fields: "国际商务、贸易经济", desc: "适合喜欢把商业现实和开放变化结合起来理解的同学。" },
+        { name: "王文潭", fields: "贸易经济、国际商务", desc: "适合关注跨地区流动、规则和组织行为的同学。" }
+      ],
+      D: [
+        { name: "郑新业", fields: "产业经济、能源经济、规制问题", desc: "适合喜欢拆解参与者选择、约束和激励关系的同学。" },
+        { name: "苏立", fields: "产业经济、应用经济", desc: "适合关注现实场景中不同角色如何互动和调整的同学。" },
+        { name: "郑㼆", fields: "产业经济、创新与规制", desc: "适合喜欢从细节里看出组织行为和规则效果的同学。" },
+        { name: "李浩然", fields: "产业经济、区域与开放", desc: "适合在地方差异、外部连接和组织行为之间来回切换的同学。" },
+        { name: "栗雅欣", fields: "产业组织、平台竞争、数字经济", desc: "适合对新场景、新规则和参与者策略特别敏感的同学。" },
+        { name: "黄隽", fields: "产业经济、文化消费", desc: "适合喜欢从消费、文化和组织行为中寻找研究问题的同学。" },
+        { name: "黄阳华", fields: "产业经济、创新发展", desc: "适合关注组织变化、技术采用和经济转型的同学。" },
+        { name: "李越欣", fields: "产业经济、应用微观", desc: "适合喜欢用细致证据拆解现实场景的同学。" },
+        { name: "张钟文", fields: "产业经济、企业行为", desc: "适合对具体行动逻辑和组织选择感兴趣的同学。" },
+        { name: "董小琦", fields: "产业经济、数字经济", desc: "适合想研究新型经济场景中行为、规则和结果的同学。" },
+        { name: "谢莉娟", fields: "商业经济、流通与消费", desc: "适合从日常流动、消费场景和组织安排里发现问题的同学。" },
+        { name: "刘向东", fields: "流通经济、商业经济", desc: "适合喜欢研究商品、组织与地方经济连接方式的同学。" },
+        { name: "王强", fields: "新零售、新型消费、数字化转型", desc: "适合对新消费场景和真实选择过程感兴趣的同学。" },
+        { name: "王晓东", fields: "商业经济、消费经济", desc: "适合关注日常经济活动背后组织逻辑的同学。" },
+        { name: "徐佳宾", fields: "贸易经济、商业组织", desc: "适合喜欢把细碎场景拆成清晰行动顺序的同学。" }
+      ],
+      E: [
+        { name: "刘瑞", fields: "区域经济、发展经济", desc: "适合把地方差异、发展路径和现实政策放在一起理解的同学。" },
+        { name: "林晨", fields: "发展经济、公共政策", desc: "适合关注人的处境、地方变化和政策效果的同学。" },
+        { name: "陈佳莹", fields: "区域与城市经济、应用微观", desc: "适合对地方空间、城市变化和微观证据都有兴趣的同学。" },
+        { name: "韩奕", fields: "能源经济、资源环境", desc: "适合关心绿色转型和真实行为变化的同学。" },
+        { name: "孙津韬", fields: "能源经济、环境政策", desc: "适合希望把资源约束、政策设计和行为反应连起来的同学。" },
+        { name: "魏楚", fields: "能源经济、环境经济", desc: "适合喜欢用证据理解绿色变化和政策影响的同学。" },
+        { name: "孙久文", fields: "区域经济、城市发展", desc: "适合关心不同地方为什么走出不同道路的同学。" },
+        { name: "张可云", fields: "区域经济、空间经济", desc: "适合喜欢地方差异、空间结构和发展格局的同学。" },
+        { name: "朱信凯", fields: "农业经济、食品安全", desc: "适合关心乡村、农业与生活质量之间关系的同学。" },
+        { name: "唐忠", fields: "农业经济、农村发展", desc: "适合关注基层发展、农业转型和政策实践的同学。" },
+        { name: "汪三贵", fields: "贫困治理、农村发展", desc: "适合想研究政策如何真正改善处境的同学。" },
+        { name: "孔祥智", fields: "农业经济、合作组织、农村政策", desc: "适合关注乡村组织、地方关系和农业制度的同学。" },
+        { name: "仇焕广", fields: "农业经济、资源环境、粮食安全", desc: "适合在农业、环境和发展问题之间寻找交叉点的同学。" },
+        { name: "靳敏", fields: "环境经济、资源环境政策", desc: "适合想把绿色转型、政策影响和发展问题结合起来的同学。" },
+        { name: "吴健", fields: "环境经济、生态补偿", desc: "适合关注资源约束、公共政策和地方发展之间关系的同学。" },
+        { name: "曾贤刚", fields: "资源与环境经济、环境政策", desc: "适合对环境治理和经济发展协调问题感兴趣的同学。" },
+        { name: "许光清", fields: "能源经济、气候政策", desc: "适合关心能源、气候和政策行为反应的同学。" },
+        { name: "王克", fields: "气候经济、低碳转型", desc: "适合对绿色规则变化和本地选择之间关系敏感的同学。" }
+      ]
+    };
+
+    const questions = [
+      {
+        q: "当你遇到一个看似普通的经济现象时，你最先想做的是：",
+        options: [
+          { text: "先把它放回更长的时间里，看它是不是某种旧逻辑的新表现。", score: { A: 3 } },
+          { text: "先找一个能对照的参照物，避免被表面变化骗过去。", score: { B: 3 } },
+          { text: "先看看它是不是由边界之外的变化牵动出来的。", score: { C: 3 } },
+          { text: "先弄清楚其中不同角色各自想要什么、能做什么。", score: { D: 3 } }
+        ]
+      },
+      {
+        q: "你更喜欢哪一种论文开头？",
+        options: [
+          { text: "一个小切口，最后慢慢牵出一片更大的外部图景。", score: { C: 3 } },
+          { text: "一个朴素问题，但能追溯到很久以前的制度和观念。", score: { A: 3 } },
+          { text: "一个非常具体的问题，答案可以被一步步验证。", score: { B: 3 } },
+          { text: "一个日常场景，里面藏着复杂的行动顺序和选择逻辑。", score: { D: 3 } }
+        ]
+      },
+      {
+        q: "读到一篇文章时，什么最容易让你停下来反复看？",
+        options: [
+          { text: "作者把一个熟悉概念重新讲活了。", score: { A: 3 } },
+          { text: "作者用很干净的办法排除了别的解释。", score: { B: 3 } },
+          { text: "作者把远处的变化和近处的结果连了起来。", score: { C: 3 } },
+          { text: "作者把几个参与者之间的微妙互动写清楚了。", score: { D: 3 } }
+        ]
+      },
+      {
+        q: "如果一项研究结论和常识相反，你最想追问：",
+        options: [
+          { text: "这个常识是不是本来就建立在某种未经反思的前提上？", score: { A: 3 } },
+          { text: "这个结论换一种检验方式之后还成立吗？", score: { B: 3 } },
+          { text: "是不是有某个更远处的变化改变了原本的关系？", score: { C: 3 } },
+          { text: "是不是参与者在真实处境下做出了和外人想象不同的选择？", score: { D: 3 } }
+        ]
+      },
+      {
+        q: "你更愿意把一个学期花在：",
+        options: [
+          { text: "把一堆表格、记录和代码整理到自己完全放心。", score: { B: 3 } },
+          { text: "追踪一个东西如何经过许多地点、环节和规则后发生变化。", score: { C: 3 } },
+          { text: "梳理一个词、一种观念或一套安排如何慢慢成形。", score: { A: 3 } },
+          { text: "观察不同人如何在同一个场景里互相试探和调整。", score: { D: 3 } }
+        ]
+      },
+      {
+        q: "面对老师问“这个问题为什么值得写”，你更自然的回答是：",
+        options: [
+          { text: "因为它能说明一种看不见但很稳定的秩序。", score: { A: 3 } },
+          { text: "因为它能让我们知道某件事到底有没有真实影响。", score: { B: 3 } },
+          { text: "因为它能解释一个地方为什么会被另一个地方改变。", score: { C: 3 } },
+          { text: "因为它能揭示表面规则下面的真实行动方式。", score: { D: 3 } }
+        ]
+      },
+      {
+        q: "你最容易被哪种材料吸引？",
+        options: [
+          { text: "很多年前的文件、旧书、年鉴和争论。", score: { A: 3 } },
+          { text: "可以反复核查、清洗和复现的记录。", score: { B: 3 } },
+          { text: "跨越不同地点、口径和规则的资料。", score: { C: 3 } },
+          { text: "能看出人们真实选择过程的细碎材料。", score: { D: 3 } }
+        ]
+      },
+      {
+        q: "你理想中的导师批评论文时，更像是在说：",
+        options: [
+          { text: "你还没说清楚这个说法从哪里来。", score: { A: 3 } },
+          { text: "这个结果现在还不能让人完全相信。", score: { B: 3 } },
+          { text: "你把视野放得太近了，再往外看一层。", score: { C: 3 } },
+          { text: "你还没有解释清楚他们为什么会这样做。", score: { D: 3 } }
+        ]
+      },
+      {
+        q: "如果研究不同地方的发展差异，你更想知道：",
+        options: [
+          { text: "为什么有些道路一旦开始，就会越走越深。", score: { A: 2, E: 1 } },
+          { text: "到底是哪一个变化真正拉开了差距。", score: { B: 2, E: 1 } },
+          { text: "它和更远地方之间的联系发生了什么变化。", score: { C: 2, E: 1 } },
+          { text: "当地人和组织之间是怎样互相配合或牵制的。", score: { D: 2, E: 1 } }
+        ]
+      },
+      {
+        q: "如果研究“绿色转型”，你更想切入：",
+        options: [
+          { text: "一种发展想象为什么会从边缘变成共识。", score: { A: 1, E: 3 } },
+          { text: "某个新规定到底有没有改变真实行为。", score: { B: 2, E: 2 } },
+          { text: "外部规则变化如何影响本地选择。", score: { C: 2, E: 2 } },
+          { text: "不同参与者如何在成本、声誉和长期收益之间权衡。", score: { D: 2, E: 2 } }
+        ]
+      },
+      {
+        q: "如果研究乡村或县域问题，你更愿意看：",
+        options: [
+          { text: "土地、家庭、集体与国家之间长期形成的关系。", score: { A: 2, E: 2 } },
+          { text: "某项措施到底有没有改善人们的处境。", score: { B: 2, E: 2 } },
+          { text: "外部需求变化如何传导到本地生活。", score: { C: 2, E: 2 } },
+          { text: "人、货、钱和信息在本地怎样流动起来。", score: { D: 2, E: 2 } }
+        ]
+      },
+      {
+        q: "写论文时，你最享受的瞬间是：",
+        options: [
+          { text: "忽然找到一个能统摄所有材料的解释框架。", score: { A: 3 } },
+          { text: "结果经过各种折腾之后仍然稳稳站住。", score: { B: 3 } },
+          { text: "原本分散的地点和事件突然连成一条线。", score: { C: 3 } },
+          { text: "几个角色之间的行动顺序终于被你理清。", score: { D: 3 } }
+        ]
+      },
+      {
+        q: "你更偏爱哪种“好问题”？",
+        options: [
+          { text: "它看起来不新，却能重新解释一个老问题。", score: { A: 3 } },
+          { text: "它范围不大，但可以被认真回答。", score: { B: 3 } },
+          { text: "它从一个局部细节出发，最后牵到更远处。", score: { C: 3 } },
+          { text: "它从一个普通场景里拆出意想不到的行动逻辑。", score: { D: 3 } }
+        ]
+      },
+      {
+        q: "当你读完一篇很厉害的论文，最容易记住的是：",
+        options: [
+          { text: "它给一个老争论换了一种说法。", score: { A: 3 } },
+          { text: "它证明结论的方式特别简洁。", score: { B: 3 } },
+          { text: "它把远近两个层面的变化接得很自然。", score: { C: 3 } },
+          { text: "它把复杂互动讲得像一盘棋。", score: { D: 3 } }
+        ]
+      },
+      {
+        q: "如果给你的研究气质起一个代号，你更愿意选：",
+        options: [
+          { text: "慢变量观察者。", score: { A: 3 } },
+          { text: "证据校准员。", score: { B: 3 } },
+          { text: "边界追踪者。", score: { C: 3 } },
+          { text: "行动拆解师。", score: { D: 3 } }
+        ]
+      }
+    ];
+
+    let userData = {};
+    let categoryScores = { A: 0, B: 0, C: 0, D: 0, E: 0 };
+    let currentQ = 0;
+
+    function startQuiz() {
+      const zodiac = document.getElementById("input-zodiac").value;
+      const mbti = document.getElementById("input-mbti").value.trim().toUpperCase();
+      const blood = document.getElementById("input-blood").value;
+      const bazi = document.getElementById("input-bazi").value;
+
+      if (!/^[E|I][S|N][T|F][J|P]$/.test(mbti) && !/^[A-Z]{4}$/.test(mbti)) {
+        document.getElementById("mbti-error").style.display = "block";
+        return;
+      }
+
+      document.getElementById("mbti-error").style.display = "none";
+      userData = { zodiac, mbti, blood, bazi };
+      document.getElementById("form-screen").style.display = "none";
+      document.getElementById("quiz-screen").style.display = "block";
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      if (currentQ >= questions.length) {
+        calculateResult();
+        return;
+      }
+
+      const qObj = questions[currentQ];
+      document.getElementById("quiz-progress").innerText = `${currentQ + 1} / ${questions.length}`;
+      document.getElementById("progress-fill").style.width = `${(currentQ / questions.length) * 100}%`;
+      document.getElementById("question-text").innerText = qObj.q;
+
+      const container = document.getElementById("options-container");
+      container.innerHTML = "";
+
+      qObj.options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.className = "option-btn";
+        btn.innerText = opt.text;
+        btn.onclick = () => {
+          Object.entries(opt.score).forEach(([cat, pts]) => {
+            categoryScores[cat] += pts;
+          });
+          currentQ += 1;
+          loadQuestion();
+        };
+        container.appendChild(btn);
+      });
+    }
+
+    function hashNumber(str) {
+      let hash = 0;
+      for (let i = 0; i < str.length; i += 1) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
+        hash |= 0;
+      }
+      return Math.abs(hash);
+    }
+
+    function topCategories() {
+      return Object.keys(categoryScores).sort((a, b) => categoryScores[b] - categoryScores[a]);
+    }
+
+    function calculateResult() {
+      document.getElementById("progress-fill").style.width = "100%";
+
+      const sortedCats = topCategories();
+      const mainCat = sortedCats[0];
+      const secondCat = sortedCats[1];
+      const maxCatScore = Math.max(...Object.values(categoryScores), 1);
+      const seed = `${userData.zodiac}-${userData.mbti}-${userData.blood}-${userData.bazi}`;
+      const seedHash = hashNumber(seed);
+      const allTeacherScores = [];
+
+      Object.entries(teachers).forEach(([cat, list]) => {
+        const catPoints = categoryScores[cat] || 0;
+        list.forEach(t => {
+          const teacherHash = hashNumber(t.name + t.fields);
+          const randomMod = Math.abs(seedHash ^ teacherHash) % 15;
+          const secondBonus = cat === secondCat ? 7 : 0;
+          const mainBonus = cat === mainCat ? 9 : 0;
+          let percentage = Math.floor((catPoints / maxCatScore) * 67) + randomMod + 12 + secondBonus + mainBonus;
+
+          if (cat === mainCat && percentage < 86) percentage = 86 + (randomMod % 7);
+          if (percentage > 99) percentage = 99;
+
+          allTeacherScores.push({
+            teacher: t,
+            category: cat,
+            percentage
+          });
+        });
+      });
+
+      allTeacherScores.sort((a, b) => {
+        if (b.percentage !== a.percentage) return b.percentage - a.percentage;
+        return a.teacher.name.localeCompare(b.teacher.name, "zh-Hans-CN");
+      });
+
+      const top5 = allTeacherScores.slice(0, 5);
+      const topMatch = top5[0];
+      const insightText = `星盘解析：当 ${userData.blood} 的 ${userData.mbti} 能量遇见 ${userData.bazi} 日主，你的研究磁场呈现出“${categoryNames[mainCat]}”的主旋律，同时带有“${categoryNames[secondCat]}”的旁支信号。系统已据此生成你的专属导师排行榜。`;
+
+      document.getElementById("quiz-screen").style.display = "none";
+      document.getElementById("result-screen").style.display = "block";
+      document.getElementById("result-type").innerText = categoryNames[mainCat];
+      document.getElementById("metaphysics-insight").innerText = insightText;
+      document.getElementById("res-name").innerText = `${topMatch.teacher.name} 老师`;
+      document.getElementById("res-fields").innerText = `代表方向：${topMatch.teacher.fields}`;
+      document.getElementById("res-desc").innerText = topMatch.teacher.desc;
+
+      const rankingListEl = document.getElementById("ranking-list");
+      rankingListEl.innerHTML = "";
+      top5.forEach((item, index) => {
+        const li = document.createElement("li");
+        li.className = "ranking-item";
+        const prefix = index === 0 ? "★ 1." : `${index + 1}.`;
+        li.innerHTML = `
+          <span class="rank-name">${prefix} ${item.teacher.name}</span>
+          <span class="rank-score">契合度 ${item.percentage}%</span>
+        `;
+        rankingListEl.appendChild(li);
+      });
+
+      const scoreGrid = document.getElementById("score-grid");
+      scoreGrid.innerHTML = "";
+      Object.keys(categoryScores).forEach(cat => {
+        const chip = document.createElement("div");
+        chip.className = "score-chip";
+        chip.innerHTML = `<strong>${categoryScores[cat]}</strong><span>${categoryShortNames[cat]}</span>`;
+        scoreGrid.appendChild(chip);
+      });
+    }
+
+    function shareResult() {
+      const name = document.getElementById("res-name").innerText;
+      const type = document.getElementById("result-type").innerText;
+      const shareText = `我的人大经济学天选导师是：${name}，研究气质：${type}`;
+
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(shareText).then(() => {
+          alert("结果文案已复制，可以直接分享啦。");
+        }).catch(() => {
+          alert("请截图保存当前页面，分享你的命定导师排行榜。");
+        });
+      } else {
+        alert("请截图保存当前页面，分享你的命定导师排行榜。");
+      }
+    }
+  </script>
+</body>
+</html>
